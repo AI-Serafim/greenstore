@@ -20,6 +20,7 @@
             <param-value>true</param-value>
         </init-param>
     </filter>
+
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -27,7 +28,7 @@
 
     <!-- === ОБЪЯВЛЕНИЕ СЕРВЛЕТОВ === -->
 
-    <!-- Auth Servlet (Login/Register/Logout) -->
+    <!-- Сервлеты авторизации -->
     <servlet>
         <servlet-name>AuthServlet</servlet-name>
         <servlet-class>com.greenstore.controller.AuthServlet</servlet-class>
@@ -37,7 +38,7 @@
         <url-pattern>/auth</url-pattern>
     </servlet-mapping>
 
-    <!-- Product Servlet (Catalog/Categories/Details) -->
+    <!-- Сервлет товаров (главная страница, каталог, категории) -->
     <servlet>
         <servlet-name>ProductServlet</servlet-name>
         <servlet-class>com.greenstore.controller.ProductServlet</servlet-class>
@@ -47,17 +48,17 @@
         <url-pattern>/products</url-pattern>
     </servlet-mapping>
     
-    <!-- Маппинг для корня приложения на каталог -->
+    <!-- Маппинг для корня сайта -->
     <servlet>
-        <servlet-name>HomeServlet</servlet-name>
+        <servlet-name>WelcomeServlet</servlet-name>
         <servlet-class>com.greenstore.controller.ProductServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>HomeServlet</servlet-name>
-        <url-pattern>/home</url-pattern>
+        <servlet-name>WelcomeServlet</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-    <!-- Cart Servlet -->
+    <!-- Сервлет корзины -->
     <servlet>
         <servlet-name>CartServlet</servlet-name>
         <servlet-class>com.greenstore.controller.CartServlet</servlet-class>
@@ -67,7 +68,7 @@
         <url-pattern>/cart</url-pattern>
     </servlet-mapping>
 
-    <!-- Order Servlet -->
+    <!-- Сервлет заказов -->
     <servlet>
         <servlet-name>OrderServlet</servlet-name>
         <servlet-class>com.greenstore.controller.OrderServlet</servlet-class>
@@ -77,7 +78,7 @@
         <url-pattern>/orders</url-pattern>
     </servlet-mapping>
 
-    <!-- Страница приветствия (перенаправление на каталог) -->
+    <!-- Страница приветствия (перенаправляет на products) -->
     <welcome-file-list>
         <welcome-file>products</welcome-file>
     </welcome-file-list>
@@ -87,6 +88,7 @@
         <error-code>404</error-code>
         <location>/WEB-INF/views/error-404.jsp</location>
     </error-page>
+
     <error-page>
         <error-code>500</error-code>
         <location>/WEB-INF/views/error-500.jsp</location>
@@ -95,5 +97,8 @@
     <!-- Сессия -->
     <session-config>
         <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
     </session-config>
 </web-app>
