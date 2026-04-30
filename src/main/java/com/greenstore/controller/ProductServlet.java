@@ -2,6 +2,7 @@ package com.greenstore.controller;
 
 import com.greenstore.model.Category;
 import com.greenstore.model.Product;
+import com.greenstore.service.DataLoader;
 import com.greenstore.service.ProductService;
 
 import javax.servlet.ServletException;
@@ -19,6 +20,17 @@ import java.util.List;
 public class ProductServlet extends HttpServlet {
     
     private final ProductService productService = new ProductService();
+    private static boolean initialized = false;
+    
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        if (!initialized) {
+            DataLoader dataLoader = new DataLoader();
+            dataLoader.init();
+            initialized = true;
+        }
+    }
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
