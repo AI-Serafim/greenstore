@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Сервис базы данных MySQL
+  db:
+    image: mysql:8.0
+    container_name: greenstore_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: greenstore_db
+      MYSQL_USER: greenstore_user
+      MYSQL_PASSWORD: greenstore_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "greenstore_user", "-pgreenstore_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Сервис приложения (Tomcat + WAR)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: greenstore_app
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: greenstore_db
+      DB_USER: greenstore_user
+      DB_PASSWORD: greenstore_password
+    volumes:
+      - ./target/greenstore.war:/usr/local/tomcat/webapps/greenstore.war
+
+volumes:
+  db_data:
