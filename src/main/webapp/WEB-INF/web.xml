@@ -28,16 +28,6 @@
 
     <!-- === ОБЪЯВЛЕНИЕ СЕРВЛЕТОВ === -->
 
-    <!-- Сервлеты авторизации -->
-    <servlet>
-        <servlet-name>AuthServlet</servlet-name>
-        <servlet-class>com.greenstore.controller.AuthServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>AuthServlet</servlet-name>
-        <url-pattern>/auth</url-pattern>
-    </servlet-mapping>
-
     <!-- Сервлет товаров (главная страница, каталог, категории) -->
     <servlet>
         <servlet-name>ProductServlet</servlet-name>
