@@ -7,10 +7,6 @@
 
     <display-name>GreenStore - Интернет-магазин эко-товаров</display-name>
 
-    <description>
-        Веб-приложение интернет-магазина экологически чистых товаров
-    </description>
-
     <!-- Настройка кодировки -->
     <filter>
         <filter-name>encodingFilter</filter-name>
@@ -24,35 +20,80 @@
             <param-value>true</param-value>
         </init-param>
     </filter>
-
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- Страница приветствия -->
+    <!-- === ОБЪЯВЛЕНИЕ СЕРВЛЕТОВ === -->
+
+    <!-- Auth Servlet (Login/Register/Logout) -->
+    <servlet>
+        <servlet-name>AuthServlet</servlet-name>
+        <servlet-class>com.greenstore.controller.AuthServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AuthServlet</servlet-name>
+        <url-pattern>/auth</url-pattern>
+    </servlet-mapping>
+
+    <!-- Product Servlet (Catalog/Categories/Details) -->
+    <servlet>
+        <servlet-name>ProductServlet</servlet-name>
+        <servlet-class>com.greenstore.controller.ProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProductServlet</servlet-name>
+        <url-pattern>/products</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Маппинг для корня приложения на каталог -->
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>com.greenstore.controller.ProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+
+    <!-- Cart Servlet -->
+    <servlet>
+        <servlet-name>CartServlet</servlet-name>
+        <servlet-class>com.greenstore.controller.CartServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CartServlet</servlet-name>
+        <url-pattern>/cart</url-pattern>
+    </servlet-mapping>
+
+    <!-- Order Servlet -->
+    <servlet>
+        <servlet-name>OrderServlet</servlet-name>
+        <servlet-class>com.greenstore.controller.OrderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OrderServlet</servlet-name>
+        <url-pattern>/orders</url-pattern>
+    </servlet-mapping>
+
+    <!-- Страница приветствия (перенаправление на каталог) -->
     <welcome-file-list>
         <welcome-file>products</welcome-file>
     </welcome-file-list>
 
-    <!-- Обработка ошибок 404 -->
+    <!-- Обработка ошибок -->
     <error-page>
         <error-code>404</error-code>
         <location>/WEB-INF/views/error-404.jsp</location>
     </error-page>
-
-    <!-- Обработка ошибок 500 -->
     <error-page>
         <error-code>500</error-code>
         <location>/WEB-INF/views/error-500.jsp</location>
     </error-page>
 
-    <!-- Сессия таймаут (30 минут) -->
+    <!-- Сессия -->
     <session-config>
         <session-timeout>30</session-timeout>
-        <cookie-config>
-            <http-only>true</http-only>
-            <secure>false</secure>
-        </cookie-config>
     </session-config>
 </web-app>
