@@ -1,5 +1,8 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<footer>
-    <p>Контактная информация: example@example.com</p>
-    <p>&copy; 2023 Интернет-магазин</p>
-</footer>
+    </main>
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2024 GreenStore. Интернет-магазин эко-товаров.</p>
+        </div>
+    </footer>
+</body>
+</html>
