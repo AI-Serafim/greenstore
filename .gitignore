@@ -1,4 +1,8 @@
-```
+# Environment
+.env
+.env.local
+*.env.*
+
 # Dependencies
 node_modules/
 .venv/
@@ -22,29 +26,22 @@ build/
 *.obj
 *.out
 
-# Environment
-.env
-.env.local
-*.env.*
-
-# Editors
+# Editor/IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
 *.tmp
 
-# Logs
+# System files
+.DS_Store
+Thumbs.db
 *.log
 
 # Coverage
 coverage/
 htmlcov/
 .coverage
-
-# System
-.DS_Store
-Thumbs.db
 
 # Compressed files
 *.zip
@@ -69,4 +66,3 @@ Thumbs.db
 *.tar.bz2
 *.tar.xz
 *.tar.zst
-```

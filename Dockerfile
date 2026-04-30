@@ -2,9 +2,12 @@ FROM maven:3.9-eclipse-temurin-17 AS builder
 
 WORKDIR /app
 
-# Копируем файлы сборки и скачиваем зависимости с повторными попытками
+# Копируем settings.xml с зеркалом Google для стабильности
+COPY settings.xml /root/.m2/settings.xml
+
+# Копируем файлы сборки и скачиваем зависимости
 COPY pom.xml .
-RUN mvn dependency:go-offline -B -Dmaven.wagon.http.retryHandler.count=3 || mvn dependency:go-offline -B
+RUN mvn dependency:go-offline -B
 
 # Копируем исходный код и собираем проект
 COPY src ./src
