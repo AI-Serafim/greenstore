@@ -1,26 +1,43 @@
 ```
-# Java/Maven specific
+# Dependencies
+node_modules/
+venv/
+.venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
 target/
+.gradle/
+
+# Build artifacts
+dist/
+build/
+*.pyc
 *.class
-*.jar
-*.war
-*.ear
+*.o
+*.exe
+*.dll
+*.so
+*.a
+*.obj
+*.out
 
-# IDE
-.idea/
-*.iml
-*.ipr
-*.iws
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
 
-# Environment
+# Environment files
 .env
 .env.local
 *.env.*
 
-# Logs
-*.log
+# Editors and IDEs
+.vscode/
+.idea/
 
-# OS
+# System files
 .DS_Store
 Thumbs.db
 
