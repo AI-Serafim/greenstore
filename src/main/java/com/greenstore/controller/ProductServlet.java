@@ -25,11 +25,6 @@ public class ProductServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        if (!initialized) {
-            DataLoader dataLoader = new DataLoader();
-            dataLoader.init();
-            initialized = true;
-        }
     }
     
     @Override
