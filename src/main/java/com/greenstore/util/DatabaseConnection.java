@@ -9,9 +9,15 @@ import java.sql.SQLException;
  */
 public class DatabaseConnection {
     
-    private static final String URL = "jdbc:mysql://localhost:3306/greenstore_db?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "root";
+    private static final String URL = String.format(
+        "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8",
+        System.getenv("DB_HOST"),
+        System.getenv("DB_PORT"),
+        System.getenv("DB_NAME")
+    );
+    
+    private static final String USERNAME = System.getenv("DB_USER");
+    private static final String PASSWORD = System.getenv("DB_PASSWORD");
     
     static {
         try {

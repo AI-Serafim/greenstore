@@ -14,7 +14,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests -B
 
 # Финальный образ с Tomcat
-FROM tomcat:10.1-jdk17
+FROM tomcat:9.0-jdk17
 
 # Удаляем стандартное приложение ROOT (опционально)
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
