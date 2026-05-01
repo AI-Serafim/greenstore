@@ -16,6 +16,9 @@ RUN mvn clean package -DskipTests -B
 # Финальный образ с Tomcat
 FROM tomcat:9.0-jdk17
 
+ENV JAVA_OPTS="-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8"
+ENV CATALINA_OPTS="-Dfile.encoding=UTF-8"
+
 # Удаляем стандартное приложение ROOT (опционально)
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
@@ -26,4 +29,4 @@ COPY --from=builder /app/target/greenstore.war /usr/local/tomcat/webapps/greenst
 EXPOSE 8080
 
 # Запуск Tomcat
-CMD ["catalina.sh", "run"]
+CMD ["sh", "-c", "catalina.sh run"]

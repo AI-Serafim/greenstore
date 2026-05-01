@@ -46,13 +46,13 @@ public class DataLoader {
     
     private void insertUser(Connection conn, String email, String passwordHash, 
                            String firstName, String lastName, boolean isAdmin) throws SQLException {
-        String sql = "INSERT INTO users (email, password, first_name, last_name, is_admin, created_at) VALUES (?, ?, ?, ?, ?, NOW())";
+        String sql = "INSERT INTO users (email, password_hash, first_name, last_name, role) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, email);
-            pstmt.setString(2, passwordHash);
+            pstmt.setString(2, passwordHash);           // BCrypt-хэш
             pstmt.setString(3, firstName);
             pstmt.setString(4, lastName);
-            pstmt.setBoolean(5, isAdmin);
+            pstmt.setString(5, isAdmin ? "ADMIN" : "USER");  // ✅ boolean → ENUM
             pstmt.executeUpdate();
         }
     }
