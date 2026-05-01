@@ -20,12 +20,31 @@ public class DataLoader {
         try {
             Connection conn = DatabaseConnection.getConnection();
             if (conn != null) {
-                conn.createStatement().executeUpdate("DELETE FROM users");
+                // Проверяем существование таблицы
+                java.sql.DatabaseMetaData meta = conn.getMetaData();
+                java.sql.ResultSet tables = meta.getTables(null, null, "users", null);
+                
+                if (tables.next()) {
+                    // Таблица существует, очищаем её
+                    conn.createStatement().executeUpdate("DELETE FROM users");
+                    conn.commit(); // Явный коммит
+                    System.out.println("Users table cleared successfully");
+                } else {
+                    System.out.println("Users table does not exist yet, will be created by JPA/Hibernate or init.sql");
+                }
+                tables.close();
                 conn.close();
-                System.out.println("Users table cleared");
             }
         } catch (SQLException e) {
             System.err.println("Error clearing users table: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        // Небольшая задержка перед созданием пользователей
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
         
         // Создаем тестового пользователя
@@ -34,8 +53,12 @@ public class DataLoader {
         user.setPhone("+7 (999) 123-45-67");
         user.setAddress("г. Москва, ул. Примерная, д. 1");
         user.setRole(User.Role.USER);
-        userDAO.create(user);
-        System.out.println("Test user created: test@example.com / password123");
+        boolean userCreated = userDAO.create(user);
+        if (userCreated) {
+            System.out.println("Test user created successfully: test@example.com / password123");
+        } else {
+            System.err.println("Failed to create test user");
+        }
         
         // Создаем администратора
         hashedPassword = BCrypt.hashpw("password123", BCrypt.gensalt(10));
@@ -43,7 +66,11 @@ public class DataLoader {
         admin.setPhone("+7 (999) 000-00-00");
         admin.setAddress("г. Москва");
         admin.setRole(User.Role.ADMIN);
-        userDAO.create(admin);
-        System.out.println("Admin user created: admin@greenstore.com / password123");
+        boolean adminCreated = userDAO.create(admin);
+        if (adminCreated) {
+            System.out.println("Admin user created successfully: admin@greenstore.com / password123");
+        } else {
+            System.err.println("Failed to create admin user");
+        }
     }
 }
