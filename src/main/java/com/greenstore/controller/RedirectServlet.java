@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "RedirectServlet", urlPatterns = {"/"})
+@WebServlet(name = "RedirectServlet", urlPatterns = {"/index.html", "/home"})
 public class RedirectServlet extends HttpServlet {
     
     @Override
