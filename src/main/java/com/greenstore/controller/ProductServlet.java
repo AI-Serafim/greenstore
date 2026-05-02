@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Контроллер для работы с товарами и категориями
  */
-@WebServlet(name = "ProductServlet", value = {"/", "/products", "/category", "/product"})
+@WebServlet(name = "ProductServlet", value = {"/products", "/category", "/product"})
 public class ProductServlet extends HttpServlet {
     
     private final ProductService productService = new ProductService();
@@ -25,6 +25,15 @@ public class ProductServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
+        
+        if (!initialized) {
+            try {
+                DataLoader.loadData(productService);
+                initialized = true;
+            } catch (Exception e) {
+                throw new ServletException("Failed to initialize application data", e);
+            }
+        }
     }
     
     @Override
@@ -37,12 +46,14 @@ public class ProductServlet extends HttpServlet {
                                         
         String path = request.getServletPath();
         
-        if ("/".equals(path) || "/products".equals(path)) {
+        if ("/products".equals(path)) {
             showAllProducts(request, response);
         } else if ("/category".equals(path)) {
             showProductsByCategory(request, response);
         } else if ("/product".equals(path)) {
             showProductDetails(request, response);
+        } else {
+            response.sendRedirect(request.getContextPath() + "/products");
         }
     }
     
