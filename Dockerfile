@@ -16,6 +16,9 @@ RUN mvn clean package -DskipTests -B
 # Финальный образ с Tomcat
 FROM tomcat:9.0-jdk17
 
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8"
 ENV JAVA_OPTS="-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8"
 ENV CATALINA_OPTS="-Dfile.encoding=UTF-8"
 

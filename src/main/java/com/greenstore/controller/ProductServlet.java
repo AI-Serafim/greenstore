@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Контроллер для работы с товарами и категориями
  */
-@WebServlet(name = "ProductServlet", value = {"/products", "/category", "/product"})
+@WebServlet(name = "ProductServlet", value = {"/", "/products", "/category", "/product"})
 public class ProductServlet extends HttpServlet {
     
     private final ProductService productService = new ProductService();
@@ -30,10 +30,14 @@ public class ProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        
+
+        response.setContentType("text/html; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+                                        
         String path = request.getServletPath();
         
-        if ("/products".equals(path)) {
+        if ("/".equals(path) || "/products".equals(path)) {
             showAllProducts(request, response);
         } else if ("/category".equals(path)) {
             showProductsByCategory(request, response);
