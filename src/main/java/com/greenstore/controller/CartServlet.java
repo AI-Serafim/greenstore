@@ -18,35 +18,25 @@ import java.util.List;
 /**
  * Контроллер для работы с корзиной
  */
-@WebServlet(name = "CartServlet", value = {"/cart", "/cart/add", "/cart/remove"})
+@WebServlet(name = "CartServlet", urlPatterns = {"/cart/add", "/cart/remove", "/cart"})
 public class CartServlet extends HttpServlet {
     
     private final CartService cartService = new CartService();
-    private final ProductService productService = new ProductService();
-    
+    private final ProductService productService = new ProductService(); 
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         request.setCharacterEncoding("UTF-8");
-                        
-        String path = request.getServletPath();
         
-        if ("/cart".equals(path)) {
-            showCart(request, response);
-        } else if ("/cart/add".equals(path)) {
-            addToCart(request, response);
-        } else if ("/cart/remove".equals(path)) {
-            removeFromCart(request, response);
-        }
+        showCart(request, response);
     }
     
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         request.setCharacterEncoding("UTF-8");
@@ -57,6 +47,8 @@ public class CartServlet extends HttpServlet {
             addToCart(request, response);
         } else if ("/cart/remove".equals(path)) {
             removeFromCart(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
         }
     }
     

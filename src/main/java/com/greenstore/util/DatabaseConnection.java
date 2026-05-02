@@ -4,14 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Утилита для получения соединений с базой данных
- */
 public class DatabaseConnection {
     
     private static final String URL = String.format(
-        "jdbc:mysql://%s:%s/%?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC" +
-"&characterEncoding=UTF-8&useUnicode=true&connectionCollation=utf8mb4_unicode_ci",
+        "jdbc:mysql://%s:%s/%s?useSSL=false&allowPublicKeyRetrieval=true" +
+        "&serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true&connectionCollation=utf8mb4_unicode_ci",
         System.getenv("DB_HOST"),
         System.getenv("DB_PORT"),
         System.getenv("DB_NAME")
@@ -39,7 +36,7 @@ public class DatabaseConnection {
             try {
                 connection.close();
             } catch (SQLException e) {
-                // Логирование ошибки закрытия соединения
+                // Логирование при необходимости
             }
         }
     }

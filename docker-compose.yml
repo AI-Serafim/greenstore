@@ -4,16 +4,15 @@ services:
   db:
     image: mysql:8.0
     container_name: greenstore_db
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: greenstore_db
       MYSQL_USER: greenstore_user
       MYSQL_PASSWORD: greenstore_password
     volumes:
-      - db_data:/var/lib/mysql
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports:
-      - "3306:3306"
+      - db_/var/lib/mysql
+      - ./src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - greenstore_net
     healthcheck:
@@ -26,23 +25,24 @@ services:
   app:
     build: .
     container_name: greenstore_app
-    depends_on:
-      db:
-        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
     environment:
       DB_HOST: db
       DB_PORT: 3306
       DB_NAME: greenstore_db
       DB_USER: greenstore_user
       DB_PASSWORD: greenstore_password
-    ports:
-      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       - greenstore_net
-    restart: on-failure
-
-volumes:
-  db_data:
 
 networks:
   greenstore_net:
+    driver: bridge
+
+volumes:
+  db_data:

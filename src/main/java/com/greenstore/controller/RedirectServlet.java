@@ -13,7 +13,8 @@ public class RedirectServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
             throws ServletException, IOException {
-        // Перенаправляем с корня на каталог товаров
+        resp.setContentType("text/html; charset=UTF-8");
+        resp.setCharacterEncoding("UTF-8");
         resp.sendRedirect(req.getContextPath() + "/products");
     }
     
