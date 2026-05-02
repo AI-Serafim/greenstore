@@ -11,8 +11,8 @@ services:
       MYSQL_USER: greenstore_user
       MYSQL_PASSWORD: greenstore_password
     volumes:
-      - db_/var/lib/mysql
-      - ./src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - greenstore_net
     healthcheck:
