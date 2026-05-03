@@ -120,6 +120,11 @@ INSERT INTO products (category_id, name, description, price, stock_quantity, ima
 -- Тестовые пользователи
 -- Пароль для всех: password123
 -- Хэши сгенерированы через BCrypt с солью
-INSERT INTO users (email, password_hash, first_name, last_name, phone, address, role) VALUES
-('admin@greenstore.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Админ', 'Админов', '+7 (999) 000-00-00', 'г. Москва', 'ADMIN'),
-('test@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Иван', 'Петров', '+7 (999) 123-45-67', 'г. Москва, ул. Примерная, д. 1', 'USER');
+-- Удаление старых пользователей если есть
+DELETE FROM users WHERE email IN ('admin@greenstore.com', 'test@example.com');
+
+-- Вставка с ФИКСИРОВАННЫМ хешем (пароль: password123)
+INSERT INTO users (email, password_hash, first_name, last_name, phone, address, role) 
+VALUES 
+('admin@greenstore.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Админ', 'Системный', '+7 (999) 000-00-00', 'г. Москва', 'ADMIN'),
+('test@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Иван', 'Петров', '+7 (999) 123-45-67', 'г. Москва, ул. Тестовая, д. 1', 'USER');

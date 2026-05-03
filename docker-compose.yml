@@ -11,6 +11,7 @@ services:
       MYSQL_USER: greenstore_user
       MYSQL_PASSWORD: greenstore_password
       TZ: "Europe/Moscow"
+      JAVA_TOOL_OPTIONS: "-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8"
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - db_data:/var/lib/mysql
