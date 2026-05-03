@@ -117,10 +117,9 @@ INSERT INTO products (category_id, name, description, price, stock_quantity, ima
 (4, 'Многоразовые сумки', 'Набор эко-сумок для покупок, 3 шт', 450.00, 90, '/images/products/bags.jpg'),
 (5, 'Хлопковая футболка', 'Футболка из 100% органического хлопка', 1200.00, 25, '/images/products/tshirt.jpg');
 
--- Тестовые пользователи будут добавлены через сервис при первом запуске
--- Пароль для всех тестовых пользователей: password123
--- Хэш генерируется динамически в AuthService через BCrypt.hashpw("password123", BCrypt.gensalt(10))
--- Для ручного добавления используйте следующий SQL (хэш может отличаться из-за соли):
--- INSERT INTO users (email, password_hash, first_name, last_name, phone, address, role) VALUES
--- ('test@example.com', '<сгенерированный_хэш>', 'Иван', 'Петров', '+7 (999) 123-45-67', 'г. Москва, ул. Примерная, д. 1', 'USER'),
--- ('admin@greenstore.com', '<сгенерированный_хэш>', 'Админ', 'Админов', '+7 (999) 000-00-00', 'г. Москва', 'ADMIN');
+-- Тестовые пользователи
+-- Пароль для всех: password123
+-- Хэши сгенерированы через BCrypt с солью
+INSERT INTO users (email, password_hash, first_name, last_name, phone, address, role) VALUES
+('admin@greenstore.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Админ', 'Админов', '+7 (999) 000-00-00', 'г. Москва', 'ADMIN'),
+('test@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Иван', 'Петров', '+7 (999) 123-45-67', 'г. Москва, ул. Примерная, д. 1', 'USER');

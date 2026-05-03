@@ -42,14 +42,14 @@ public class DataLoader {
                     
                     // Очищаем таблицу пользователей для тестов и создаём тестовых пользователей
                     try (Statement stmt = conn.createStatement()) {
-                        stmt.execute("DELETE FROM users");
+                        stmt.execute("DELETE FROM users WHERE email IN ('admin@greenstore.com', 'test@example.com')");
                     }
                     
                     String adminPass = BCrypt.hashpw("password123", BCrypt.gensalt());
                     String testPass = BCrypt.hashpw("password123", BCrypt.gensalt());
                     
-                    insertUser(conn, "admin@greenstore.com", adminPass, "Admin", "Adminov", true);
-                    insertUser(conn, "test@example.com", testPass, "Test", "Testov", false);
+                    insertUser(conn, "admin@greenstore.com", adminPass, "Админ", "Админов", "+7 (999) 000-00-00", "г. Москва", true);
+                    insertUser(conn, "test@example.com", testPass, "Иван", "Петров", "+7 (999) 123-45-67", "г. Москва, ул. Примерная, д. 1", false);
                     
                     System.out.println("✓ Тестовые данные и пользователи созданы");
                     return;
@@ -118,14 +118,16 @@ public class DataLoader {
     }
     
     private static void insertUser(Connection conn, String email, String passwordHash, 
-                           String firstName, String lastName, boolean isAdmin) throws SQLException {
-        String sql = "INSERT INTO users (email, password_hash, first_name, last_name, role) VALUES (?, ?, ?, ?, ?)";
+                           String firstName, String lastName, String phone, String address, boolean isAdmin) throws SQLException {
+        String sql = "INSERT INTO users (email, password_hash, first_name, last_name, phone, address, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, email);
             pstmt.setString(2, passwordHash);
             pstmt.setString(3, firstName);
             pstmt.setString(4, lastName);
-            pstmt.setString(5, isAdmin ? "ADMIN" : "USER");
+            pstmt.setString(5, phone);
+            pstmt.setString(6, address);
+            pstmt.setString(7, isAdmin ? "ADMIN" : "USER");
             pstmt.executeUpdate();
         }
     }

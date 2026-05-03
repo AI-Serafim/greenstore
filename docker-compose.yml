@@ -10,6 +10,8 @@ services:
       MYSQL_DATABASE: greenstore_db
       MYSQL_USER: greenstore_user
       MYSQL_PASSWORD: greenstore_password
+      TZ: "Europe/Moscow"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - db_data:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
@@ -34,6 +36,7 @@ services:
       DB_NAME: greenstore_db
       DB_USER: greenstore_user
       DB_PASSWORD: greenstore_password
+      TZ: "Europe/Moscow"
     depends_on:
       db:
         condition: service_healthy
