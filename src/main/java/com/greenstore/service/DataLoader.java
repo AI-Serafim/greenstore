@@ -1,10 +1,14 @@
 package com.greenstore.service;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.ResultSet;
 
 /**
  * DataLoader - проверяет подключение к БД.
  * Данные (товары, категории, пользователи) загружаются через database/init.sql при первом старте БД.
+ * Этот класс НЕ создает пользователей - только проверяет соединение.
  */
 public class DataLoader {
     
@@ -15,7 +19,7 @@ public class DataLoader {
 
         if (url == null) {
             // Добавляем явное указание кодировки UTF-8 для JDBC соединения
-            url = "jdbc:mysql://db:3306/greenstore_db?useSSL=false&allowPublicKeyRetrieval=true" +
+            url = "jdbc:mysql://db:3306/greenstore?useSSL=false&allowPublicKeyRetrieval=true" +
                   "&serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true";
         }
         if (user == null) user = "greenstore_user";
@@ -30,7 +34,7 @@ public class DataLoader {
 
                 try (Connection conn = DriverManager.getConnection(url, user, password)) {
                     System.out.println("=== GreenStore Starting ===");
-                    System.out.println("✓ Подключение к БД успешно");
+                    System.out.println("Database connection successful");
                     
                     // Устанавливаем кодировку для соединения
                     try (Statement stmt = conn.createStatement()) {
@@ -42,23 +46,23 @@ public class DataLoader {
                     try (Statement stmt = conn.createStatement();
                          ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM products")) {
                         if (rs.next() && rs.getInt(1) > 0) {
-                            System.out.println("✓ Товары найдены в БД (загружены через init.sql)");
+                            System.out.println("Products found in database (loaded via init.sql)");
                         } else {
-                            System.out.println("⚠ Товары не найдены. Проверьте database/init.sql");
+                            System.out.println("Warning: No products found. Check database/init.sql");
                         }
                     }
                     
                     // Пользователи создаются через database/init.sql с правильным BCrypt хешем
-                    System.out.println("✓ Пользователи загружаются из database/init.sql");
+                    System.out.println("Users loaded from database/init.sql");
                     
-                    System.out.println("=== Ready ===");
+                    System.out.println("=== GreenStore Ready ===");
                     return;
                     
                 }
             } catch (Exception e) {
-                System.err.println("⏳ Попытка " + attempt + "/" + maxRetries + ": " + e.getMessage());
+                System.err.println("Attempt " + attempt + "/" + maxRetries + ": " + e.getMessage());
                 if (attempt == maxRetries) {
-                    System.err.println("❌ Не удалось подключиться к БД после " + maxRetries + " попыток");
+                    System.err.println("Failed to connect to database after " + maxRetries + " attempts");
                     e.printStackTrace();
                     return;
                 }
