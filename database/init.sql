@@ -1,8 +1,11 @@
 -- Инициализация базы данных для интернет-магазина "GreenStore"
--- Создает базу данных и все необходимые таблицы
+-- Создает базу данных и все необходимые таблицы с UTF-8 кодировкой
 
--- Создание базы данных
-CREATE DATABASE IF NOT EXISTS greenstore_db;
+-- Создание базы данных с явной кодировкой utf8mb4
+DROP DATABASE IF EXISTS greenstore_db;
+CREATE DATABASE greenstore_db 
+    CHARACTER SET utf8mb4 
+    COLLATE utf8mb4_unicode_ci;
 USE greenstore_db;
 
 -- Таблица пользователей
@@ -119,11 +122,7 @@ INSERT INTO products (category_id, name, description, price, stock_quantity, ima
 
 -- Тестовые пользователи
 -- Пароль для всех: password123
--- Хэши сгенерированы через BCrypt с солью
--- Удаление старых пользователей если есть
-DELETE FROM users WHERE email IN ('admin@greenstore.com', 'test@example.com');
-
--- Вставка с ФИКСИРОВАННЫМ хешем (пароль: password123)
+-- Хеш: $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
 INSERT INTO users (email, password_hash, first_name, last_name, phone, address, role) 
 VALUES 
 ('admin@greenstore.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Админ', 'Системный', '+7 (999) 000-00-00', 'г. Москва', 'ADMIN'),
