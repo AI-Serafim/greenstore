@@ -4,12 +4,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 public class DatabaseConnection {
     
+    private static final Logger LOGGER = Logger.getLogger(DatabaseConnection.class.getName());
+    
     private static final String URL = String.format(
         "jdbc:mysql://%s:%s/%s?useSSL=false&allowPublicKeyRetrieval=true" +
-        "&serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true",
+        "&serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true&connectionCollation=utf8mb4_unicode_ci",
         System.getenv("DB_HOST"),
         System.getenv("DB_PORT"),
         System.getenv("DB_NAME")
@@ -35,7 +38,7 @@ public class DatabaseConnection {
             stmt.execute("SET NAMES utf8mb4");
             stmt.execute("SET CHARACTER SET utf8mb4");
         } catch (SQLException e) {
-            // Игнорируем ошибку установки кодировки
+            LOGGER.warning("Failed to set charset: " + e.getMessage());
         }
         return connection;
     }
@@ -45,7 +48,7 @@ public class DatabaseConnection {
             try {
                 connection.close();
             } catch (SQLException e) {
-                // Логирование при необходимости
+                LOGGER.warning("Failed to close connection: " + e.getMessage());
             }
         }
     }

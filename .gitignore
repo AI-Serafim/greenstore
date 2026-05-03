@@ -1,24 +1,30 @@
-# Compiled and build artifacts
+```
+# Compiled and binary files
 *.class
 *.o
 *.obj
+*.exe
+*.dll
+*.so
+*.a
 *.out
-build/
-target/
 
 # Dependencies
-node_modules/
-venv/
-.venv/
-__pycache__/
+lib/
+target/
+.gradle/
 .mypy_cache/
 .pytest_cache/
-.gradle/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 
 # Logs and temp files
 *.log
 *.tmp
 *.swp
+*.swo
 
 # Environment
 .env
@@ -29,11 +35,10 @@ __pycache__/
 .vscode/
 .idea/
 
-# Coverage
+# Build artifacts
+build/
+dist/
 coverage/
 htmlcov/
 .coverage
-
-# System
-.DS_Store
-Thumbs.db
+```

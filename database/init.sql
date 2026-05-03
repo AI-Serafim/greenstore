@@ -1,12 +1,14 @@
 -- Инициализация базы данных для интернет-магазина "GreenStore"
 -- Создает базу данных и все необходимые таблицы с UTF-8 кодировкой
 
+-- Удаление старой базы данных (если существует) для сброса кодировки
+DROP DATABASE IF EXISTS greenstore;
+
 -- Создание базы данных с явной кодировкой utf8mb4
-DROP DATABASE IF EXISTS greenstore_db;
-CREATE DATABASE greenstore_db 
-    CHARACTER SET utf8mb4 
-    COLLATE utf8mb4_unicode_ci;
-USE greenstore_db;
+CREATE DATABASE greenstore CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Использование новой базы данных
+USE greenstore;
 
 -- Таблица пользователей
 CREATE TABLE users (
