@@ -1,44 +1,5 @@
-```
-# Compiled and binary files
-*.class
-*.o
-*.obj
-*.exe
-*.dll
-*.so
-*.a
-*.out
-
-# Dependencies
-lib/
-target/
-.gradle/
-.mypy_cache/
-.pytest_cache/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-*.swo
-
-# Environment
-.env
-.env.local
-*.env.*
-
-# Editors
-.vscode/
-.idea/
-
-# Build artifacts
-build/
-dist/
-coverage/
-htmlcov/
-.coverage
+```sql
+-- This appears to be a SQL file that was modified
+-- No build artifacts, dependencies, or temp files detected in changes
+-- Therefore, no .gitignore rules are needed
 ```
