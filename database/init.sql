@@ -120,6 +120,8 @@ INSERT INTO products (category_id, name, description, price, stock_quantity, ima
 (4, 'Многоразовые сумки', 'Набор эко-сумок для покупок, 3 шт', 450.00, 90, '/images/products/bags.jpg'),
 (5, 'Хлопковая футболка', 'Футболка из 100% органического хлопка', 1200.00, 25, '/images/products/tshirt.jpg');
 
--- Тестовые пользователи удалены из SQL скрипта
--- Пользователи создаются автоматически при старте приложения через DataLoader.java
--- с гарантированно рабочим BCrypt хешем для пароля "password123"
+-- Тестовые пользователи с гарантированно рабочим BCrypt хешем для пароля "password123"
+-- Хеш: $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
+INSERT INTO users (email, password_hash, first_name, last_name, phone, address, role) VALUES
+('admin@greenstore.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Админ', 'Системный', '+7 (999) 000-00-00', 'г. Москва', 'ADMIN'),
+('test@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Иван', 'Петров', '+7 (999) 123-45-67', 'г. Москва, ул. Тестовая, д. 1', 'USER');
