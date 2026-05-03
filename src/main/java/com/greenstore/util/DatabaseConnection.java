@@ -8,7 +8,7 @@ public class DatabaseConnection {
     
     private static final String URL = String.format(
         "jdbc:mysql://%s:%s/%s?useSSL=false&allowPublicKeyRetrieval=true" +
-        "&serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true&connectionCollation=utf8mb4_unicode_ci",
+        "&serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true",
         System.getenv("DB_HOST"),
         System.getenv("DB_PORT"),
         System.getenv("DB_NAME")
@@ -28,7 +28,15 @@ public class DatabaseConnection {
     private DatabaseConnection() {}
     
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        // Устанавливаем кодировку для каждого нового соединения
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute("SET NAMES utf8mb4");
+            stmt.execute("SET CHARACTER SET utf8mb4");
+        } catch (SQLException e) {
+            // Игнорируем ошибку установки кодировки
+        }
+        return connection;
     }
     
     public static void closeConnection(Connection connection) {
