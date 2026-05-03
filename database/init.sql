@@ -1,16 +1,19 @@
--- Инициализация базы данных для интернет-магазина "GreenStore"
--- Создает базу данных и все необходимые таблицы с UTF-8 кодировкой
+-- Инициализация базы данных для GreenStore
+-- Используем только ASCII символы и Unicode escapes для гарантии корректности
 
--- Удаление старой базы данных (если существует) для сброса кодировки
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+SET character_set_connection=utf8mb4;
+SET character_set_client=utf8mb4;
+
 DROP DATABASE IF EXISTS greenstore;
 
--- Создание базы данных с явной кодировкой utf8mb4
 CREATE DATABASE greenstore CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Использование новой базы данных
 USE greenstore;
 
--- Таблица пользователей
+SET NAMES utf8mb4;
+
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -24,7 +27,6 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Таблица категорий товаров
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
@@ -35,7 +37,6 @@ CREATE TABLE categories (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Таблица товаров
 CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     category_id INT NOT NULL,
@@ -50,80 +51,61 @@ CREATE TABLE products (
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Таблица корзины покупок
-CREATE TABLE cart (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL DEFAULT 1,
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_user_product (user_id, product_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Таблица заказов
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    order_number VARCHAR(50) NOT NULL UNIQUE,
-    status ENUM('PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED') DEFAULT 'PENDING',
     total_amount DECIMAL(10, 2) NOT NULL,
-    delivery_address TEXT NOT NULL,
-    contact_phone VARCHAR(20) NOT NULL,
-    notes TEXT,
+    status ENUM('PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED') DEFAULT 'PENDING',
+    shipping_address TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Таблица элементов заказа
 CREATE TABLE order_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT NOT NULL,
     product_id INT NOT NULL,
-    product_name VARCHAR(200) NOT NULL,
     quantity INT NOT NULL,
-    unit_price DECIMAL(10, 2) NOT NULL,
-    subtotal DECIMAL(10, 2) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Индексы для оптимизации запросов
-CREATE INDEX idx_products_category ON products(category_id);
-CREATE INDEX idx_products_available ON products(is_available);
-CREATE INDEX idx_cart_user ON cart(user_id);
-CREATE INDEX idx_orders_user ON orders(user_id);
-CREATE INDEX idx_orders_status ON orders(status);
-CREATE INDEX idx_order_items_order ON order_items(order_id);
+CREATE TABLE cart_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_product (user_id, product_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Добавление тестовых данных
-
--- Категории товаров
+-- Категории (Unicode escapes)
 INSERT INTO categories (name, description, image_url, sort_order) VALUES
-('Эко-продукты питания', 'Натуральные и органические продукты питания', '/images/categories/food.jpg', 1),
-('Бытовая химия', 'Экологически чистые средства для дома', '/images/categories/cleaning.jpg', 2),
-('Косметика и уход', 'Натуральная косметика и средства гигиены', '/images/categories/cosmetics.jpg', 3),
-('Товары для дома', 'Эко-товары для уютного дома', '/images/categories/home.jpg', 4),
-('Одежда и текстиль', 'Одежда из натуральных материалов', '/images/categories/clothing.jpg', 5);
+('\u042D\u043A\u043E-\u043F\u0440\u043E\u0434\u0443\u043A\u0442\u044B \u043F\u0438\u0442\u0430\u043D\u0438\u044F', '\u041D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u044B\u0435 \u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u0435 \u043F\u0440\u043E\u0434\u0443\u043A\u0442\u044B', '/images/categories/food.jpg', 1),
+('\u0411\u044B\u0442\u043E\u0432\u0430\u044F \u0445\u0438\u043C\u0438\u044F', '\u042D\u043A\u043E\u043B\u043E\u0433\u0438\u0447\u0435\u0441\u043A\u0438 \u0447\u0438\u0441\u0442\u044B\u0435 \u0441\u0440\u0435\u0434\u0441\u0442\u0432\u0430 \u0434\u043B\u044F \u0434\u043E\u043C\u0430', '/images/categories/cleaning.jpg', 2),
+('\u041A\u043E\u0441\u043C\u0435\u0442\u0438\u043A\u0430 \u0438 \u0443\u0445\u043E\u0434', '\u041D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u043E\u0441\u043C\u0435\u0442\u0438\u043A\u0430 \u0438 \u0441\u0440\u0435\u0434\u0441\u0442\u0432\u0430 \u0433\u0438\u0433\u0438\u0435\u043D\u044B', '/images/categories/cosmetics.jpg', 3),
+('\u0422\u043E\u0432\u0430\u0440\u044B \u0434\u043B\u044F \u0434\u043E\u043C\u0430', '\u042D\u043A\u043E-\u0442\u043E\u0432\u0430\u0440\u044B \u0434\u043B\u044F \u0443\u044E\u0442\u043D\u043E\u0433\u043E \u0434\u043E\u043C\u0430', '/images/categories/home.jpg', 4),
+('\u041E\u0434\u0435\u0436\u0434\u0430 \u0438 \u0442\u0435\u043A\u0441\u0442\u0438\u043B\u044C', '\u041E\u0434\u0435\u0436\u0434\u0430 \u0438\u0437 \u043D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u044B\u0445 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u043E\u0432', '/images/categories/clothing.jpg', 5);
 
--- Товары
+-- Товары (Unicode escapes)
 INSERT INTO products (category_id, name, description, price, stock_quantity, image_url) VALUES
-(1, 'Органический мёд', 'Натуральный цветочный мёд с пасеки', 450.00, 50, '/images/products/honey.jpg'),
-(1, 'Чиа семена', 'Органические семена чиа, 500г', 320.00, 100, '/images/products/chia.jpg'),
-(1, 'Зелёный чай матча', 'Японский зелёный чай матча, 100г', 890.00, 30, '/images/products/matcha.jpg'),
-(2, 'Эко-средство для посуды', 'Концентрированное средство, 500мл', 280.00, 75, '/images/products/dish soap.jpg'),
-(2, 'Универсальный очиститель', 'Натуральный очиститель для поверхностей', 350.00, 60, '/images/products/cleaner.jpg'),
-(3, 'Шампунь без сульфатов', 'Натуральный шампунь для всех типов волос', 520.00, 40, '/images/products/shampoo.jpg'),
-(3, 'Крем для лица', 'Увлажняющий крем с органическими маслами', 780.00, 35, '/images/products/face cream.jpg'),
-(4, 'Бамбуковые зубные щётки', 'Набор из 4 штук', 290.00, 80, '/images/products/toothbrush.jpg'),
-(4, 'Многоразовые сумки', 'Набор эко-сумок для покупок, 3 шт', 450.00, 90, '/images/products/bags.jpg'),
-(5, 'Хлопковая футболка', 'Футболка из 100% органического хлопка', 1200.00, 25, '/images/products/tshirt.jpg');
+(1, '\u041E\u0440\u0433\u0430\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u043C\u0451\u0434', '\u041D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0446\u0432\u0435\u0442\u043E\u0447\u043D\u044B\u0439 \u043C\u0451\u0434', 450.00, 50, '/images/products/honey.jpg'),
+(1, '\u0427\u0438\u0430 \u0441\u0435\u043C\u0435\u043D\u0430', '\u041E\u0440\u0433\u0430\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u0435 \u0441\u0435\u043C\u0435\u043D\u0430 \u0447\u0438\u0430, 500\u0433', 320.00, 100, '/images/products/chia.jpg'),
+(1, '\u0417\u0435\u043B\u0451\u043D\u044B\u0439 \u0447\u0430\u0439 \u043C\u0430\u0442\u0447\u0430', '\u042F\u043F\u043E\u043D\u0441\u043A\u0438\u0439 \u0437\u0435\u043B\u0451\u043D\u044B\u0439 \u0447\u0430\u0439, 100\u0433', 890.00, 30, '/images/products/matcha.jpg'),
+(2, '\u042D\u043A\u043E-\u0441\u0440\u0435\u0434\u0441\u0442\u0432\u043E \u0434\u043B\u044F \u043F\u043E\u0441\u0443\u0434\u044B', '\u041A\u043E\u043D\u0446\u0435\u043D\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u043E\u0435 \u0441\u0440\u0435\u0434\u0441\u0442\u0432\u043E, 500\u043C\u043B', 280.00, 75, '/images/products/dish_soap.jpg'),
+(2, '\u0423\u043D\u0438\u0432\u0435\u0440\u0441\u0430\u043B\u044C\u043D\u044B\u0439 \u043E\u0447\u0438\u0441\u0442\u0438\u0442\u0435\u043B\u044C', '\u041D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u043E\u0447\u0438\u0441\u0442\u0438\u0442\u0435\u043B\u044C', 350.00, 60, '/images/products/cleaner.jpg'),
+(3, '\u0428\u0430\u043C\u043F\u0443\u043D\u044C \u0431\u0435\u0437 \u0441\u0443\u043B\u044C\u0444\u0430\u0442\u043E\u0432', '\u041D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0448\u0430\u043C\u043F\u0443\u043D\u044C', 520.00, 40, '/images/products/shampoo.jpg'),
+(3, '\u041A\u0440\u0435\u043C \u0434\u043B\u044F \u043B\u0438\u0446\u0430', '\u0423\u0432\u043B\u0430\u0436\u043D\u044F\u044E\u0449\u0438\u0439 \u043A\u0440\u0435\u043C', 780.00, 35, '/images/products/face_cream.jpg'),
+(4, '\u0411\u0430\u043C\u0431\u0443\u043A\u043E\u0432\u044B\u0435 \u0437\u0443\u0431\u043D\u044B\u0435 \u0449\u0451\u0442\u043A\u0438', '\u041D\u0430\u0431\u043E\u0440 \u0438\u0437 4 \u0448\u0442\u0443\u043A', 290.00, 80, '/images/products/toothbrush.jpg'),
+(4, '\u041C\u043D\u043E\u0433\u043E\u0440\u0430\u0437\u043E\u0432\u044B\u0435 \u0441\u0443\u043C\u043A\u0438', '\u041D\u0430\u0431\u043E\u0440 \u044D\u043A\u043E-\u0441\u0443\u043C\u043E\u043A, 3 \u0448\u0442', 450.00, 90, '/images/products/bags.jpg'),
+(5, '\u0425\u043B\u043E\u043F\u043A\u043E\u0432\u0430\u044F \u0444\u0443\u0442\u0431\u043E\u043B\u043A\u0430', '\u0424\u0443\u0442\u0431\u043E\u043B\u043A\u0430 \u0438\u0437 100% \u0445\u043B\u043E\u043F\u043A\u0430', 1200.00, 25, '/images/products/tshirt.jpg');
 
--- Тестовые пользователи с гарантированно рабочим BCrypt хешем для пароля "password123"
--- Хеш: $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
-INSERT INTO users (email, password_hash, first_name, last_name, phone, address, role) VALUES
-('admin@greenstore.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Админ', 'Системный', '+7 (999) 000-00-00', 'г. Москва', 'ADMIN'),
-('test@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Иван', 'Петров', '+7 (999) 123-45-67', 'г. Москва, ул. Тестовая, д. 1', 'USER');
+-- Пользователи
+-- BCrypt хеш для пароля "password123": $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
+INSERT INTO users (email, password_hash, first_name, last_name, role) VALUES
+('admin@greenstore.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '\u0410\u0434\u043C\u0438\u043D', '\u0410\u0434\u043C\u0438\u043D\u043E\u0432', 'ADMIN'),
+('user@greenstore.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '\u0418\u0432\u0430\u043D', '\u041F\u0435\u0442\u0440\u043E\u0432', 'USER');
